@@ -56,6 +56,12 @@ public class SecurityConfig {
                 .logoutSuccessHandler(logoutSuccessHandler())
                 .deleteCookies("remember-me");
 
+        http
+                .sessionManagement()
+                .sessionFixation().changeSessionId()
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false);
+
         return http.build();
     }
 
