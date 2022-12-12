@@ -12,10 +12,28 @@ public class SecurityController {
         return "home";
     }
 
-    @GetMapping(value = "loginPage")
-    public String loginPage() {
+//    @GetMapping(value = "loginPage")
+//    public String loginPage() {
+//
+//        return "loginPage";
+//    }
 
-        return "loginPage";
+    @GetMapping("/user")
+    public String user() {
+
+        return "user";
+    }
+
+    @GetMapping("/admin")
+    public String admin() {
+
+        return "admin";
+    }
+
+    @GetMapping("/admin/pay")
+    public String adminPay() {
+
+        return "adminPay";
     }
 
 }
