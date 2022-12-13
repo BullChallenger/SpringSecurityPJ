@@ -36,4 +36,16 @@ public class SecurityController {
         return "adminPay";
     }
 
+    @GetMapping(value = "/denied")
+    public String denied() {
+
+        return "Access is denied";
+    }
+
+    @GetMapping(value = "/login")
+    public String login() {
+
+        return "login";
+    }
+
 }
