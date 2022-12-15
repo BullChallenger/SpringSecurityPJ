@@ -1,6 +1,7 @@
 package io.security.basicSecurity.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -11,6 +12,13 @@ public class SecurityController {
 
         return "home";
     }
+
+//    csrf_token 없이 POST와 같은 HTTP 메소드로 접근 시 403 오류 발생
+//    @PostMapping(value = "/")
+//    public String postHome() {
+//
+//        return "home";
+//    }
 
 //    @GetMapping(value = "loginPage")
 //    public String loginPage() {
@@ -42,10 +50,10 @@ public class SecurityController {
         return "Access is denied";
     }
 
-    @GetMapping(value = "/login")
-    public String login() {
-
-        return "login";
-    }
+//    @GetMapping(value = "/login")
+//    public String login() {
+//
+//        return "login";
+//    }
 
 }

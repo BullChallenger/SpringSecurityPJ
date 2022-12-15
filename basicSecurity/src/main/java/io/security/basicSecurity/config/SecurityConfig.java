@@ -3,10 +3,15 @@ package io.security.basicSecurity.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
@@ -31,6 +36,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
 //    @Autowired
@@ -52,15 +58,23 @@ public class SecurityConfig {
                 .userDetailsService(inMemoryUser());
 
         http
+                .antMatcher("/admin/**")
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/user").hasRole("USER")
-                .antMatchers("/admin/pay").hasRole("ADMIN")
-                .antMatchers("/admin/**").access("hasRole('ADMIN') or hasRole('SYS')")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .successHandler(authenticationSuccessHandler());
+                .httpBasic();
+
+////        http
+////                .authorizeRequests()
+////                .antMatchers("/login").permitAll()
+//                .antMatchers("/user").hasRole("USER")
+//                .antMatchers("/admin/pay").hasRole("ADMIN")
+//                .antMatchers("/admin/**").access("hasRole('ADMIN') or hasRole('SYS')")
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin()
+//                .successHandler(authenticationSuccessHandler());
+
 //                .loginPage("/loginPage")
 //                .defaultSuccessUrl("/")
 //                .failureUrl("/login")
@@ -95,6 +109,33 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .accessDeniedHandler(accessDeniedHandler());
+
+        return http.build();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
+
+        http
+                .antMatcher("/user/**")
+                .authorizeRequests()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .formLogin();
+
+        return http.build();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain3(HttpSecurity http) throws Exception {
+
+        http
+                .authorizeRequests()
+                .anyRequest()
+                .permitAll()
+                .and()
+                .formLogin();
 
         return http.build();
     }
