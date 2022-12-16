@@ -14,6 +14,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -51,6 +53,21 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(user, admin, sys);
     }
 
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin();
+//
+//        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+//
+//        return http.build();
+//    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -58,15 +75,18 @@ public class SecurityConfig {
                 .userDetailsService(inMemoryUser());
 
         http
-                .antMatcher("/admin/**")
                 .authorizeRequests()
+                .antMatchers("/admin/pay").hasRole("ADMIN")
+                .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .httpBasic();
+                .formLogin();
 
-////        http
-////                .authorizeRequests()
-////                .antMatchers("/login").permitAll()
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+//
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/login").permitAll()
 //                .antMatchers("/user").hasRole("USER")
 //                .antMatchers("/admin/pay").hasRole("ADMIN")
 //                .antMatchers("/admin/**").access("hasRole('ADMIN') or hasRole('SYS')")
@@ -74,7 +94,7 @@ public class SecurityConfig {
 //                .and()
 //                .formLogin()
 //                .successHandler(authenticationSuccessHandler());
-
+//
 //                .loginPage("/loginPage")
 //                .defaultSuccessUrl("/")
 //                .failureUrl("/login")
@@ -84,7 +104,7 @@ public class SecurityConfig {
 //                .successHandler(authenticationSuccessHandler())
 //                .failureHandler(authenticationFailureHandler())
 //                .permitAll();
-
+//
 //        http
 //                .rememberMe()
 //                .rememberMeParameter("remember")
@@ -98,47 +118,48 @@ public class SecurityConfig {
 //                .addLogoutHandler(logoutHandler())
 //                .logoutSuccessHandler(logoutSuccessHandler())
 //                .deleteCookies("remember-me");
-
+//
 //        http
 //                .sessionManagement()
 //                .sessionFixation().changeSessionId()
 //                .maximumSessions(1)
 //                .maxSessionsPreventsLogin(false);
-
-        http
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint())
-                .accessDeniedHandler(accessDeniedHandler());
-
+//
+//        http
+//                .exceptionHandling()
+//                .authenticationEntryPoint(authenticationEntryPoint())
+//                .accessDeniedHandler(accessDeniedHandler());
+//
         return http.build();
     }
 
-    @Bean
-    public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
+//    @Bean
+//    public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
+//
+//        http
+//                .antMatcher("/user/**")
+//                .authorizeRequests()
+//                .anyRequest()
+//                .authenticated()
+//                .and()
+//                .formLogin();
+//
+//
+//        return http.build();
+//    }
 
-        http
-                .antMatcher("/user/**")
-                .authorizeRequests()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .formLogin();
-
-        return http.build();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain3(HttpSecurity http) throws Exception {
-
-        http
-                .authorizeRequests()
-                .anyRequest()
-                .permitAll()
-                .and()
-                .formLogin();
-
-        return http.build();
-    }
+//    @Bean
+//    public SecurityFilterChain filterChain3(HttpSecurity http) throws Exception {
+//
+//        http
+//                .authorizeRequests()
+//                .anyRequest()
+//                .permitAll()
+//                .and()
+//                .formLogin();
+//
+//        return http.build();
+//    }
 
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
