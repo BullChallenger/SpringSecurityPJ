@@ -53,21 +53,6 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(user, admin, sys);
     }
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//
-//        http
-//                .authorizeRequests()
-//                .antMatchers("/").permitAll()
-//                .anyRequest().authenticated()
-//                .and()
-//                .formLogin();
-//
-//        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
-//
-//        return http.build();
-//    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -75,15 +60,37 @@ public class SecurityConfig {
                 .userDetailsService(inMemoryUser());
 
         http
+                .antMatcher("/admin/**")
                 .authorizeRequests()
                 .antMatchers("/admin/pay").hasRole("ADMIN")
-                .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin();
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/")
+                .successHandler(authenticationSuccessHandler());
 
         SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+
+        return http.build();
+    }
+
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 //
+//        http
+//                .userDetailsService(inMemoryUser());
+//
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/admin/pay").hasRole("ADMIN")
+//                .antMatchers("/").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin();
+//
+//        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+////
 //        http
 //                .authorizeRequests()
 //                .antMatchers("/login").permitAll()
@@ -130,8 +137,8 @@ public class SecurityConfig {
 //                .authenticationEntryPoint(authenticationEntryPoint())
 //                .accessDeniedHandler(accessDeniedHandler());
 //
-        return http.build();
-    }
+//        return http.build();
+//    }
 
 //    @Bean
 //    public SecurityFilterChain filterChain2(HttpSecurity http) throws Exception {
