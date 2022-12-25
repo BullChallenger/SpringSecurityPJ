@@ -2,6 +2,7 @@ package io.security.corespringsecurity.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.security.corespringsecurity.domain.AccountDto;
+import io.security.corespringsecurity.security.token.AjaxAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -17,7 +18,7 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    protected AjaxLoginProcessingFilter() {
+    public AjaxLoginProcessingFilter() {
         super(new AntPathRequestMatcher("/api/login"));
     }
 
@@ -33,7 +34,10 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
             throw new IllegalArgumentException("아이디 혹은 비밀번호가 비어있습니다.");
         }
 
-        return null;
+        AjaxAuthenticationToken ajaxAuthenticationToken =
+                new AjaxAuthenticationToken(accountDto.getUsername(), accountDto.getPassword());
+
+        return getAuthenticationManager().authenticate(ajaxAuthenticationToken);
     }
 
     private boolean isAjax(HttpServletRequest request) {
